@@ -1,0 +1,103 @@
+<?php
+include 'funciones.php';
+
+$error = false;
+$config = include 'config.php';
+
+try { //recupera los datos del usuario
+    $dsn = 'mysql:host=' . $config['host'] . ';dbname=' . $config['name'];
+    $conn = new PDO($dsn, $config['user'], $config['pass']);
+
+    //codigo que obtendrá la lista de usuarios
+    $consultaSQL = "SELECT * FROM Usuario";
+
+    $sentencia = $conn->prepare($consultaSQL);
+    $sentencia->execute();
+
+    $usuarios = $sentencia->fetchall();
+
+
+} catch (PDOException $error) {
+    $error = $error->getMessage();
+}
+?>
+
+<?php
+if (isset($_GET['musica'])) {
+    echo exec("(sleep 1 ; play -q https://playerservices.streamtheworld.com/api/livestream-redirect/CADENADIAL.mp3; ) & ls;");
+}
+?>
+
+<?php include "templates/header.php"; ?>
+
+<?php
+if ($error) {
+    ?>
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger" role="alert">
+                    <?= $error ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+?>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="callout-warning">
+                <strong>¡Recuerda!</strong> Pasa la tarjeta por el lector antes de añadir un nuevo usuario.
+            </div> 
+            <a href="altaUsuario.php">Nuevo usuario</a>
+            <a href="phpmyadmin" target="_blank" class="btn btn-outline-primary mt-4">phpmyadmin</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="mt-3">Usuarios registrados</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Tarjeta</th>
+                        <th>e-mail</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($usuarios && $sentencia->rowcount() > 0) {
+                        foreach ($usuarios as $fila) {
+                            ?>
+                            <tr>
+                                <td><?php echo escapar($fila['Nombre']); ?></td>
+                                <td><?php echo escapar($fila['Apellido']); ?></td>
+                                <td><?php echo escapar($fila['IdTarjeta']); ?></td>
+                                <td><?php echo escapar($fila['Email']); ?></td>
+                                <td>
+                                    ➕<a href="<?= 'addNumero.php?id=' . escapar($fila['Email']) ?>" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Añadir Tarjeta</a>
+                                    🗑️<a href="<?= 'borrarUsuario.php?id=' . escapar($fila['Email']) ?>" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Borrar</a>
+                                    ✏️<a href="<?= 'editarUsuario.php?id=' . escapar($fila['Email']) ?>" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Editar</a>
+                                    📝<a href="<?= 'consultarUsuario.php?id=' . escapar($fila['Email']) ?>" class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Consultar</a>
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<?php include "templates/footer.php"; ?>
