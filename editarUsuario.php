@@ -1,4 +1,16 @@
 <?php
+
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+if($_SESSION['Rol'] != "Admin"){
+    header("Location: login.php");
+    exit;    
+}
+
 include 'funciones.php';
 
 $error = false;
@@ -153,11 +165,6 @@ if (isset($usuario) && $usuario) {
                         <label for="FechaNacimiento">Fecha de nacimiento</label>
                         <input type="date" name="fechaNacimiento" id="FechaNacimiento" class="form-control"
                             value="<?= escapar($usuario['FechaNacimiento']) ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="tarjeta">Tarjeta</label>
-                        <input type="text" name="tarjeta" id="tarjeta" value="<?= escapar($usuario['id']) ?>"
-                            class="form-control" disabled>
                     </div>
                     <div class="form-group">
                         <label for="tipoBono">Tipo de bono</label>

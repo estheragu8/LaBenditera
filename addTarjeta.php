@@ -1,5 +1,15 @@
 <?php
-include 'funciones.php';
+
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: login.php");
+    exit;
+}
+
+if($_SESSION['Rol'] != "Admin"){
+    header("Location: login.php");
+    exit;    
+}include 'funciones.php';
 
 $error = false;
 $config = include 'config.php';
