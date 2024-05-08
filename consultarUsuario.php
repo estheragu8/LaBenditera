@@ -6,9 +6,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
-if($_SESSION['Rol'] == "Admin"){
+if ($_SESSION['Rol'] == "Admin") {
     $email = $_GET['id'];
-}else{
+} else {
     $email = $_SESSION["Email"];
 }
 
@@ -195,42 +195,46 @@ if (isset($sesiones) && isset($usuario)) {
                 </h2>
             </div>
             <div class="col-md-12">
-                <form method="post">
-                    <div class="accordion bg-warning-subtle" id="accordionExample">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button collapsed bg-warning-subtle" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
-                                    Renovar Bono
-                                </button>
-                            </h2>
-                            <div id="flush-collapseOne" class="accordion-collapse collapse"
-                                data-bs-parent="#accordionFlushExample">
-                                <div class="accordion-body">
-                                    <div class="form-group row align-items-center">
-                                        <div class="col-md-1"> <input type="radio" id="10" name="MinutosBono" value="10"
-                                                required>
-                                            <label for="10">10h</label>
-                                        </div>
-                                        <div class="col-md-1"><input type="radio" id="20" name="MinutosBono" value="20"
-                                                required>
-                                            <label for="20">20h</label>
-                                        </div>
-                                        <div class="col-md-1"><input type="radio" id="30" name="MinutosBono" value="30"
-                                                required>
-                                            <label for="30">30h</label>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <button type="submit" class="btn btn-warning" name="renovar">Renovar
-                                                bono</button>
+                <?php
+                if ($_SESSION['Rol'] == "Admin") {
+                    echo '<form method="post">
+                        <div class="accordion bg-warning-subtle" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed bg-warning-subtle" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                        aria-controls="flush-collapseOne">
+                                        Renovar Bono
+                                    </button>
+                                </h2>
+                                <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                    data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <div class="form-group row align-items-center">
+                                            <div class="col-md-1"> <input type="radio" id="10" name="MinutosBono" value="10"
+                                                    required>
+                                                <label for="10">10h</label>
+                                            </div>
+                                            <div class="col-md-1"><input type="radio" id="20" name="MinutosBono" value="20"
+                                                    required>
+                                                <label for="20">20h</label>
+                                            </div>
+                                            <div class="col-md-1"><input type="radio" id="30" name="MinutosBono" value="30"
+                                                    required>
+                                                <label for="30">30h</label>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="submit" class="btn btn-warning" name="renovar">Renovar
+                                                    bono</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>';
+                }
+                ?>
                 <table class="table">
                     <thead>
                         <tr>

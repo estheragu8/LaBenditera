@@ -32,11 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         } else {
             // Contraseña incorrecta
-            echo "Nombre de usuario o contraseña incorrectos.";
+            $_SESSION['Incorrecto'] = "incorrecto";
+            header("Location: login.php");
         }
     } else {
         // Usuario no encontrado
-        echo "Nombre de usuario o .-- contraseña incorrectos.";
+        $_SESSION['Incorrecto'] = "incorrecto";
+        header("Location: login.php");
     }
 }
 ?>
