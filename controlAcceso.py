@@ -89,6 +89,12 @@ def mensajeBienvenida():
     lcd.clear()
     lcd.write_string("Esperando marca...")
 
+def mensaje(_line1, _line2):
+    lcd.clear()
+    lcd.write_string(_line1)
+    lcd.cursor_pos = (1, 0)
+    lcd.write_string(_line2)
+
 def zum(_veces, _tiempo):
     for i in range(0, _veces):
         # Enciende el zumbador
@@ -174,14 +180,10 @@ def main():
                             lcd.clear()
                             if(tipo == 'entrada'):
                                 if(horas > 0):
-                                    lcd.write_string("Hola")
-                                    lcd.cursor_pos = (1, 0)
-                                    lcd.write_string("{0}! :)".format(nombre[1]))
+                                    mensaje("Hola", "{0}! :)".format(nombre[1]))
                                     zum(3, 0.1)
                                 else:
-                                    lcd.write_string("{0}".format(nombre[1]))
-                                    lcd.cursor_pos = (1, 0)
-                                    lcd.write_string("SIN HORAS.")
+                                    mensaje("{0}".format(nombre[1]), "SIN HORAS.")
                                     zum(12, 0.05)
                             else:
                                 minutos = obtenerHoras(cursor_db, email)
@@ -190,22 +192,19 @@ def main():
                                     mandarMail("Te estás quedando sin horas en tu bono... :(", emailCasiSinBonos, "info.estheragullo@gmail.com")
                                 elif(horas <= 3):
                                     mandarMail("Te has quedado sin horas en tu bono... :(", emailSinBonos, "info.estheragullo@gmail.com")
-                                lcd.write_string("Hasta pronto")
-                                lcd.cursor_pos = (1, 0)
-                                lcd.write_string("{0}! :) {1}".format(nombre[1], horas))
+                                mensaje("Hasta pronto", "{0}! :) {1}".format(nombre[1], horas))
                                 zum(1, 1)
                             
                             sleep(2)
                         except:
-                            lcd.clear()
-                            lcd.write_string("Usuario no registrado 1")
+                            mensaje("Usuario no registrado.", "")
+
                             sleep(1)
                 except:
                     escribirTarjeta(
                             cnx, cursor_db, idTarjeta)
                     zum(1, 0.5)
-                    lcd.clear()
-                    lcd.write_string("Tarjeta lista.")
+                    mensaje("Tarjeta lista.", "")
                     sleep(1)
         else:
             sleep(0.5)
