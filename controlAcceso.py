@@ -48,7 +48,7 @@ def escribirTarjeta(_cnx, _cursor, _idTarjeta):
 
 #Obtenemos las horas del usuario que ha pasado la tarjeta
 def obtenerHoras(_cursor, _email):
-    query = "SELECT MinutosDisponibles FROM {0} WHERE Email='{1}'".format("Bono", _email)
+    query = "SELECT MinutosDisponibles, MinutosBono Horas FROM {0} WHERE Email='{1}'".format("Bono", _email)
     _cursor.execute(query)
     return _cursor.fetchone()
 
@@ -141,48 +141,52 @@ def main():
             idTarjeta = reader.read_id()
             if idTarjeta:
                 variable = "false"
-                try: 
-                    nombre = devolverUsuario(cursor_db, idTarjeta)
-                    if nombre:
-                        email = nombre[0]
-                        minutos = obtenerHoras(cursor_db, email)
+                print(idTarjeta)
+                nombre = devolverUsuario(cursor_db, idTarjeta)
+                if nombre:
+                    email = nombre[0]
+                    minutos = obtenerHoras(cursor_db, email)
+                    if(minutos[0]):
                         horas = minutos[0]/60
-                        numMarca = devolverNumeroMarcajes(cursor_db, email)
+                    else:
+                        horas = minutos[1]/60
+                    numMarca = devolverNumeroMarcajes(cursor_db, email)
 
-                        if numMarca % 2 == 0:
-                            tipo = 'entrada'
-                        else:
-                            tipo = 'salida'
+                    if numMarca % 2 == 0:
+                        tipo = 'entrada'
+                    else:
+                        tipo = 'salida'
 
-                        secNow = int(t.mktime(datetime.now().timetuple()))
+                    secNow = int(t.mktime(datetime.now().timetuple()))
 
-                        marca = secNow
-                        marca = t.strftime("%Y-%m-%d %H:%M", t.localtime(marca))
-                        try:
-                            escribirRegistro(
-                                cnx, cursor_db, email, tipo, marca)
-                            if(tipo == 'entrada'):
-                                if(horas > 0):
-                                    mensaje("Hola", "{0}! :)".format(nombre[1]))
-                                    zum(3, 0.1)
-                                else:
-                                    mensaje("{0}".format(nombre[1]), "SIN HORAS.")
-                                    zum(12, 0.05)
+                    marca = secNow
+                    marca = t.strftime("%Y-%m-%d %H:%M", t.localtime(marca))
+                    try:
+                        escribirRegistro(
+                            cnx, cursor_db, email, tipo, marca)
+                        if(tipo == 'entrada'):
+                            if(horas > 0):
+                                mensaje("Hola", "{0}! :)".format(nombre[1]))
+                                zum(3, 0.1)
                             else:
-                                if(horas <= 0):
-                                    mandarMail("Te has quedado sin horas en tu bono... :(", emailSinBonos, email)
-                                elif(horas <= 3):
-                                    mandarMail("Te estás quedando sin horas en tu bono... :(", emailCasiSinBonos, email)
-                                mensaje("Hasta pronto", "{0}! :) {1}".format(nombre[1], horas))
-                                zum(1, 1)
-                            
-                            sleep(2)
-                        except:
-                            mensaje("Usuario no registrado.", "")
-                            sleep(1)
-                except:
+                                mensaje("{0}".format(nombre[1]), "SIN HORAS.")
+                                zum(12, 0.05)
+                        else:
+                            if(horas <= 0):
+                                mandarMail("Te has quedado sin horas en tu bono... :(", emailSinBonos, email)
+                            elif(horas <= 3):
+                                mandarMail("Te estás quedando sin horas en tu bono... :(", emailCasiSinBonos, email)
+                            mensaje("Hasta pronto", " {0}".format(horas))
+                            zum(1, 1)
+                        
+                        sleep(2)
+                    except:
+                        print(idTarjeta)
+                        mensaje("Usuario no registrado.", "")
+                        sleep(1)
+                else:
                     escribirTarjeta(
-                            cnx, cursor_db, idTarjeta)
+                        cnx, cursor_db, idTarjeta)
                     zum(1, 0.5)
                     mensaje("Tarjeta lista.", "")
                     sleep(1)

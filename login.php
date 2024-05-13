@@ -27,7 +27,7 @@ if (isset($_POST["newPassword"])) {
 }
 
 if($_SESSION['Incorrecto'] == "incorrecto"){
-    echo '<div class="toast align-items-center text-bg-danger border-0 fade show" role="alert" aria-live="assertive" aria-atomic="true" fade show>
+    echo '<div class="toast align-items-center text-bg-danger border-0 show" role="alert" aria-live="assertive" aria-atomic="true" fade show>
     <div class="d-flex">
       <div class="toast-body">
         Email o contraseña incorrectos.
